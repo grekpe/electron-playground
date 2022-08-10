@@ -1,0 +1,16 @@
+**/*.log
+*.iml
+.DS_Store
+.gradle
+.idea
+.nyc_output
+.vscode
+.editorconfig
+coverage
+dist
+lib
+node_modules
+results
+typings
+yarn.lock
+stats.json
