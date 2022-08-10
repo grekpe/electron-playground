@@ -2,9 +2,9 @@ const { app, components, BrowserWindow } = require('electron');
 
 function createWindow() {
   const mainWindow = new BrowserWindow();
-  // mainWindow.loadURL('https://bitmovin.com/demos/drm');
+  mainWindow.loadURL('https://bitmovin.com/demos/drm');
   // mainWindow.loadURL('https://reference.dashif.org/dash.js/latest/samples/drm/widevine.html');
-  mainWindow.loadURL('http://localhost:56520');
+  // mainWindow.loadURL('http://localhost:56520');
 }
 
 // // 'http://localhost:56520',
