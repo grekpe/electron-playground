@@ -1,22 +1,43 @@
-function init() {
-  var protData = {
-    'com.widevine.alpha': {
-      serverURL: 'https://drm-widevine-licensing.axtest.net/AcquireLicense',
-      httpRequestHeaders: {
-        'X-AxDRM-Message':
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2ZXJzaW9uIjoxLCJjb21fa2V5X2lkIjoiYjMzNjRlYjUtNTFmNi00YWUzLThjOTgtMzNjZWQ1ZTMxYzc4IiwibWVzc2FnZSI6eyJ0eXBlIjoiZW50aXRsZW1lbnRfbWVzc2FnZSIsImZpcnN0X3BsYXlfZXhwaXJhdGlvbiI6NjAsInBsYXlyZWFkeSI6eyJyZWFsX3RpbWVfZXhwaXJhdGlvbiI6dHJ1ZX0sImtleXMiOlt7ImlkIjoiOWViNDA1MGQtZTQ0Yi00ODAyLTkzMmUtMjdkNzUwODNlMjY2IiwiZW5jcnlwdGVkX2tleSI6ImxLM09qSExZVzI0Y3Iya3RSNzRmbnc9PSJ9XX19.FAbIiPxX8BHi9RwfzD7Yn-wugU19ghrkBFKsaCPrZmU',
-      },
-      priority: 0,
-    },
-  };
-  var video,
-    player,
-    url = 'https://media.axprod.net/TestVectors/v7-MultiDRM-SingleKey/Manifest_1080p.mpd';
+const drmConfig = {
+  licenceAcquisitionUrl:
+    'https://ovp.stable-int.skyshowtime.com/drm/widevine/acquirelicense?bt=73571-kywoaU86K012mQDW_anvvHPMfBGT2ADNdFSG4MgN5JbIcTJettsSlQslcNUYOPnMbRm7cSHc58N8K0rY_jC3DEcJeDrsFigSfFN2tSaCLbQLrqaiAV_HNFTdIuZFdavJsbMJOq7-CXgKDsfP-j_uzNtEvmPbyrq3zCzJ5GhTI9dPg0cVG8l1ZwO7mnIserdXQLUOpMAyabSh2_Qp1-PsRsMK-7AZYGOaaMS1jGlYHPoXs2sbPeLm1aWzdBufyQ0C6hafnOCGsd0kkXQhT_-EJVS7Sz-OWMJXHlFmSB15A6h-2GK6zQ==',
+};
 
-  video = document.querySelector('video');
-  player = dashjs.MediaPlayer().create();
-  player.initialize(video, url, true);
-  player.setProtectionData(protData);
+function init() {
+  const videoElement = document.querySelector('video');
+  const player = new RxPlayer({ videoElement });
+
+  player.loadVideo({
+    url: 'https://g001-vod-eu-cmaf-stg-lu.scdn01.cssott.com/SST/2j/GMO_00000000001874_01/SST_1643059028584-EjZkW_01/mpeg_cenc/master_manifest_r0.mpd',
+    transport: 'dash',
+    autoPlay: true,
+    keySystems: [
+      {
+        type: 'com.widevine.alpha',
+        getLicense: challenge => {
+          console.log(challenge);
+          return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', drmConfig.licenceAcquisitionUrl, true);
+            xhr.onerror = err => {
+              reject(err);
+            };
+            xhr.onload = evt => {
+              if (xhr.status >= 200 && xhr.status < 300) {
+                const license = evt.target.response;
+                resolve(license);
+              } else {
+                const error = new Error("getLicense's request finished with a " + `${xhr.status} HTTP error`);
+                reject(error);
+              }
+            };
+            xhr.responseType = 'arraybuffer';
+            xhr.send(challenge);
+          });
+        },
+      },
+    ],
+  });
 }
 
 function check() {

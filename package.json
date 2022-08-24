@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "electron": "https://github.com/castlabs/electron-releases#v20.0.0+wvcus",
+    "rx-player": "^3.28.0",
     "serve": "^14.0.1"
   }
 }

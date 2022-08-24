@@ -2,9 +2,30 @@ const { app, components, BrowserWindow } = require('electron');
 
 function createWindow() {
   const mainWindow = new BrowserWindow();
-  mainWindow.loadURL('https://bitmovin.com/demos/drm');
+
+  // mainWindow.webContents.session.webRequest.onBeforeSendHeaders((details, callback) => {
+  //   callback({ requestHeaders: { Origin: '*', ...details.requestHeaders } });
+  // });
+
+  // mainWindow.webContents.session.webRequest.onHeadersReceived((details, callback) => {
+  //   callback({
+  //     responseHeaders: {
+  //       'Access-Control-Allow-Origin': ['*'],
+  //       // We use this to bypass headers
+  //       'Access-Control-Allow-Headers': ['*'],
+  //       ...details.responseHeaders,
+  //     },
+  //   });
+  // });
+
+  //   {
+  //   webPreferences: {
+  //     webSecurity: false,
+  //   },
+  // }
+  // mainWindow.loadURL('https://bitmovin.com/demos/drm');
   // mainWindow.loadURL('https://reference.dashif.org/dash.js/latest/samples/drm/widevine.html');
-  // mainWindow.loadURL('http://localhost:56520');
+  mainWindow.loadURL('http://localhost:3000');
 }
 
 // // 'http://localhost:56520',
